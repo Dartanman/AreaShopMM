@@ -34,7 +34,7 @@ dependencies {
     implementation("com.google.inject.extensions:guice-assistedinject:7.0.0") {
         exclude("com.google.guava", "guava")
     }
-    implementation("net.kyori:adventure-platform-bukkit:4.3.0")
+    implementation("net.kyori:adventure-text-minimessage:4.14.0")
 
     // Project submodules
     implementation(projects.areashopInterface)

@@ -165,6 +165,7 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 	 */
 	@Override
 	public void onEnable() {
+		getCommand("mmtest").setExecutor(new MMTestCmd());
 		AreaShop.instance = this;
 		Do.init(this);
 		managers = new HashSet<>();
