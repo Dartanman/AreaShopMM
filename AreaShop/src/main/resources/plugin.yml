@@ -4,16 +4,13 @@ version: "${version}"
 description: "Selling and renting WorldGuard regions to your players, highly configurable."
 depend: [Vault, WorldGuard, WorldEdit]
 softdepend: [Multiverse-Core, FastAsyncWorldEdit]
-author: NLThijs48
+authors: [NLThijs48, md5sha256, Dartanman]
 website: https://github.com/md5sha256/AreaShop
 commands:
   AreaShop:
     description: 'For all commands use /as help.'
     usage: 'AreaShop has not started correctly, check the log file (or console) and correct any errors.'
     aliases: [as]
-  mmtest:
-    description: 'Test MiniMessage'
-    usage: /<command>
 awareness:
   - !@UTF8
 api-version: 1.17

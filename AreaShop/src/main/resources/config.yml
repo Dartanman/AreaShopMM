@@ -12,6 +12,12 @@ chatPrefix:
 
 # WorldGuard doesn't support MiniMessage, so when setting WorldGuard Greetings, this prefix is used instead.
 wgPrefix: '&2[AreaShop] &r'
+
+# Whether you want to use MiniMessage (in Paper) or stick to the older built-in language management for AreaShop messages.
+# Note that **IF YOU SET THIS TO TRUE, YOU MUST CHANGE YOUR LANGUAGE FILE TO USE MINIMESSAGE**
+# An English example is provided in ENMM.yml (ENglish MiniMessage)
+UseMiniMessage: false
+
 # The language file that should be used, check the 'lang' folder for build-in languages (use the filename without .yml here).
 # More information can be found here: https://github.com/NLthijs48/AreaShop/wiki/Language-support.
 language: EN
@@ -181,4 +187,4 @@ maximumTries: 50000
 # %tpyaw%          The exact yaw of the teleport location
 # %tpyawround%     The rounded yaw of the teleport location
 # %tpworld%        The world name of the teleport location
-# %lang:<languageKey>|Optional arguments|%  Insert a message from EN.yml, for example: '%lang:timeleft-ended%' or '%lang:timeleft-years|15|%'
+# %lang:<languageKey>|Optional arguments|%  Insert a message from your language yml file, for example: '%lang:timeleft-ended%' or '%lang:timeleft-years|15|%'

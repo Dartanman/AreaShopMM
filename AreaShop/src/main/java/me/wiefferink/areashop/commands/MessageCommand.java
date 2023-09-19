@@ -2,6 +2,7 @@ package me.wiefferink.areashop.commands;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import me.wiefferink.areashop.AreaShop;
 import me.wiefferink.areashop.MessageBridge;
 import me.wiefferink.areashop.tools.Utils;
 import me.wiefferink.interactivemessenger.processing.Message;
@@ -59,28 +60,35 @@ public class MessageCommand extends CommandAreaShop {
 		send(m, player);
 	}
 
-	private void send(Message message, Object target) {
-		if(message.get() == null || message.get().size() == 0 || (message.get().size() == 1 && message.get().get(0).length() == 0) || target == null) {
-			return;
-		}
-		message.doReplacements();
+	private void send(Message message, Player target) {
+		if(AreaShop.useMiniMessage())
+		{
+			if(message.get() == null || message.get().size() == 0 || (message.get().size() == 1 && message.get().get(0).length() == 0) || target == null) {
+				return;
+			}
+			message.doReplacements();
 
-		StringBuilder messageStr = new StringBuilder();
-		for(String line : message.get())
-		{
-			messageStr.append(line);
-		}
+			StringBuilder messageStr = new StringBuilder();
+			for(String line : message.get())
+			{
+				messageStr.append(line);
+			}
 
-		MiniMessage mm = MiniMessage.miniMessage();
-		TextComponent parsed = (TextComponent) mm.deserialize(messageStr.toString());
-		try
-		{
-			Audience audience = (Audience) target;
-			audience.sendMessage(parsed);
+			MiniMessage mm = MiniMessage.miniMessage();
+			TextComponent parsed = (TextComponent) mm.deserialize(messageStr.toString());
+			try
+			{
+				Audience audience = (Audience) target;
+				audience.sendMessage(parsed);
+			}
+			catch (ClassCastException e)
+			{
+				Bukkit.getLogger().severe("AreaShop sent a non-supported Object as the Audience for a Message!");
+			}
 		}
-		catch (ClassCastException e)
+		else
 		{
-			Bukkit.getLogger().severe("AreaShop sent a non-supported Object as the Audience for a Message!");
+			message.send(target);
 		}
 	}
 
