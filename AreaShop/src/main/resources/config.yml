@@ -10,7 +10,7 @@
 chatPrefix:
   - '<click:run_command:/areashop help><hover:show_text:"AreaShop region management plugin<newline>%lang:action|Click to check the available commands|%"><dark_green>[AreaShop]<reset> '
 
-# WorldGuard doesn't support MiniMessage, so when setting WorldGuard Greetings, this prefix is used instead.
+# WorldGuard doesn't support MiniMessage, so when setting WorldGuard Greetings, this prefix is used instead. (Bukkit color codes)
 wgPrefix: '&2[AreaShop] &r'
 
 # Whether you want to use MiniMessage (in Paper) or stick to the older built-in language management for AreaShop messages.
@@ -20,7 +20,9 @@ UseMiniMessage: false
 
 # The language file that should be used, check the 'lang' folder for build-in languages (use the filename without .yml here).
 # More information can be found here: https://github.com/NLthijs48/AreaShop/wiki/Language-support.
+# NOTE: **IF UseMiniMessage IS SET TO TRUE, THE LANGUAGE FILE GIVEN SHOULD HAVE MINIMESSAGE FORMAT**
 language: EN
+
 # The tags that need to be written on the first line of a sign to add it to AreaShop.
 signTags:
   # Add a rental region.
