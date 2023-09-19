@@ -6,9 +6,19 @@
 # ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
 # │ GENERAL: Options that influence the global state of the plugin                                                             │
 # └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
 # Chat prefix used for all messages in the chat
+# The commented one is the same Prefix as the given chatPrefix, only in MiniMessage format instead of the built-in
+# language management that has historically been part of AreaShop.
+# Note: **IF UseMiniMessage IS SET TO TRUE, USE MINIMESSAGE FORMAT FOR THIS PREFIX**
+#chatPrefix:
+#  - '<click:run_command:/areashop help><hover:show_text:"AreaShop region management plugin<newline>%lang:action|Click to check the available commands|%"><dark_green>[AreaShop]<reset> '
 chatPrefix:
-  - '<click:run_command:/areashop help><hover:show_text:"AreaShop region management plugin<newline>%lang:action|Click to check the available commands|%"><dark_green>[AreaShop]<reset> '
+  - '[darkgreen][AreaShop][reset]'
+  - '  hover: AreaShop region management plugin'
+  - '  hover: %lang:action|Click to check the available commands|%'
+  - '  command: /areashop help'
+  - ' '
 
 # WorldGuard doesn't support MiniMessage, so when setting WorldGuard Greetings, this prefix is used instead. (Bukkit color codes)
 wgPrefix: '&2[AreaShop] &r'
