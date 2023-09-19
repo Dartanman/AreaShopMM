@@ -18,6 +18,9 @@ import me.wiefferink.areashop.tools.Utils;
 import me.wiefferink.bukkitdo.Do;
 import me.wiefferink.interactivemessenger.processing.Message;
 import me.wiefferink.interactivemessenger.processing.ReplacementProvider;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -742,7 +745,33 @@ public abstract class GeneralRegion implements GeneralRegionInterface, Comparabl
 		Object[] newParams = new Object[params.length + 1];
 		newParams[0] = this;
 		System.arraycopy(params, 0, newParams, 1, params.length);
-		Message.fromKey(key).prefix(prefix).replacements(newParams).send(target);
+		Message m = Message.fromKey(key).prefix(prefix).replacements(newParams);
+		send(m, target);
+	}
+
+	private void send(Message message, Object target) {
+		if(message.get() == null || message.get().size() == 0 || (message.get().size() == 1 && message.get().get(0).length() == 0) || target == null) {
+			return;
+		}
+		message.doReplacements();
+
+		StringBuilder messageStr = new StringBuilder();
+		for(String line : message.get())
+		{
+			messageStr.append(line);
+		}
+
+		MiniMessage mm = MiniMessage.miniMessage();
+		TextComponent parsed = (TextComponent) mm.deserialize(messageStr.toString());
+		try
+		{
+			Audience audience = (Audience) target;
+			audience.sendMessage(parsed);
+		}
+		catch (ClassCastException e)
+		{
+			Bukkit.getLogger().severe("AreaShop sent a non-supported Object as the Audience for a Message!");
+		}
 	}
 
 	public void messageNoPrefix(Object target, String key, Object... params) {

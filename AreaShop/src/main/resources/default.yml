@@ -120,18 +120,18 @@ general:
       block-break: 'deny g:non_members'
       block-place: 'deny g:non_members'
     forrent:
-      greeting: '%lang:prefix%%lang:greeting-forrent%'
+      greeting: '%lang:wgPrefix%%lang:greeting-forrent%'
     rented:
       members: '%uuid%, %friendsuuid%'
-      greeting: '%lang:prefix%%lang:greeting-rented%'
+      greeting: '%lang:wgPrefix%%lang:greeting-rented%'
     forsale:
-      greeting: '%lang:prefix%%lang:greeting-forsale%'
+      greeting: '%lang:wgPrefix%%lang:greeting-forsale%'
     sold:
       members: '%uuid%, %friendsuuid%'
-      greeting: '%lang:prefix%%lang:greeting-bought%'
+      greeting: '%lang:wgPrefix%%lang:greeting-bought%'
     resell:
       members: '%uuid%, %friendsuuid%'
-      greeting: '%lang:prefix%%lang:greeting-resale%'
+      greeting: '%lang:wgPrefix%%lang:greeting-resale%'
 
   ##### Save and restore schematics to clean up regions.
   # After 'save:' or 'restore:' you enter the name of the file to restore from/to (.schematic is added automatically).

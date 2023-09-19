@@ -3,6 +3,7 @@ package me.wiefferink.areashop.commands;
 import io.github.bakedlibs.dough.blocks.BlockPosition;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import me.wiefferink.areashop.AreaShop;
 import me.wiefferink.areashop.MessageBridge;
 import me.wiefferink.areashop.managers.IFileManager;
 import me.wiefferink.areashop.regions.BuyRegion;
@@ -11,6 +12,10 @@ import me.wiefferink.areashop.regions.RegionGroup;
 import me.wiefferink.areashop.regions.RentRegion;
 import me.wiefferink.areashop.tools.Utils;
 import me.wiefferink.interactivemessenger.processing.Message;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -137,8 +142,33 @@ public class InfoCommand extends CommandAreaShop {
 				for(int i = linesPrinted; i < maximumItems - 1; i++) {
 					sender.sendMessage(" ");
 				}
-				footer.send(sender);
+				send(footer, sender);
 			}
+		}
+	}
+
+	private void send(Message message, Object target) {
+		if(message.get() == null || message.get().size() == 0 || (message.get().size() == 1 && message.get().get(0).length() == 0) || target == null) {
+			return;
+		}
+		message.doReplacements();
+
+		StringBuilder messageStr = new StringBuilder();
+		for(String line : message.get())
+		{
+			messageStr.append(line);
+		}
+
+		MiniMessage mm = MiniMessage.miniMessage();
+		TextComponent parsed = (TextComponent) mm.deserialize(messageStr.toString());
+		try
+		{
+			Audience audience = (Audience) target;
+			audience.sendMessage(parsed);
+		}
+		catch (ClassCastException e)
+		{
+			Bukkit.getLogger().severe("AreaShop sent a non-supported Object as the Audience for a Message!");
 		}
 	}
 
@@ -332,7 +362,7 @@ public class InfoCommand extends CommandAreaShop {
 						}
 						if(foundSomething) {
 							tp.append(".");
-							tp.send(sender);
+							send(tp, sender);
 						}
 						// Signs
 						List<String> signLocations = new ArrayList<>();
@@ -409,7 +439,7 @@ public class InfoCommand extends CommandAreaShop {
 						}
 						if(foundSomething) {
 							tp.append(".");
-							tp.send(sender);
+							send(tp, sender);
 						}
 						// Signs
 						List<String> signLocations = new ArrayList<>();

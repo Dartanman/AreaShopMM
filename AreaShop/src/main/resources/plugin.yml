@@ -11,6 +11,9 @@ commands:
     description: 'For all commands use /as help.'
     usage: 'AreaShop has not started correctly, check the log file (or console) and correct any errors.'
     aliases: [as]
+  mmtest:
+    description: 'Test MiniMessage'
+    usage: /<command>
 awareness:
   - !@UTF8
 api-version: 1.17
