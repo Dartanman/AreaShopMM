@@ -8,11 +8,6 @@
 # └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 # Chat prefix used for all messages in the chat
-# The commented one is the same Prefix as the given chatPrefix, only in MiniMessage format instead of the built-in
-# language management that has historically been part of AreaShop.
-# Note: **IF UseMiniMessage IS SET TO TRUE, USE MINIMESSAGE FORMAT FOR THIS PREFIX**
-#chatPrefix:
-#  - '<click:run_command:/areashop help><hover:show_text:"AreaShop region management plugin<newline>%lang:action|Click to check the available commands|%"><dark_green>[AreaShop]<reset> '
 chatPrefix:
   - '[darkgreen][AreaShop][reset]'
   - '  hover: AreaShop region management plugin'
@@ -23,15 +18,22 @@ chatPrefix:
 # WorldGuard doesn't support MiniMessage, so when setting WorldGuard Greetings, this prefix is used instead. (Bukkit color codes)
 wgPrefix: '&2[AreaShop] &r'
 
+# The language file that should be used, check the 'lang' folder for build-in languages (use the filename without .yml here).
+# More information can be found here: https://github.com/NLthijs48/AreaShop/wiki/Language-support.
+language: EN
+
 # Whether you want to use MiniMessage (in Paper) or stick to the older built-in language management for AreaShop messages.
 # Note that **IF YOU SET THIS TO TRUE, YOU MUST CHANGE YOUR LANGUAGE FILE TO USE MINIMESSAGE**
 # An English example is provided in ENMM.yml (ENglish MiniMessage)
 UseMiniMessage: false
 
+# Chat prefix used for all messages in chat **IF UseMiniMessage IS SET TO TRUE**
+mmChatPrefix:
+  - '<click:run_command:/areashop help><hover:show_text:"AreaShop region management plugin<newline>%lang:action|Click to check the available commands|%"><dark_green>[AreaShop]<reset> '
+
 # The language file that should be used, check the 'lang' folder for build-in languages (use the filename without .yml here).
-# More information can be found here: https://github.com/NLthijs48/AreaShop/wiki/Language-support.
-# NOTE: **IF UseMiniMessage IS SET TO TRUE, THE LANGUAGE FILE GIVEN SHOULD HAVE MINIMESSAGE FORMAT**
-language: EN
+# **THIS IS ONLY APPLICABLE IF UseMiniMessage IS SET TO TRUE**
+mmLanguage: ENMM
 
 # The tags that need to be written on the first line of a sign to add it to AreaShop.
 signTags:

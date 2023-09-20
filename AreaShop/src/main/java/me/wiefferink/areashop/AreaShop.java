@@ -404,9 +404,9 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 		languageManager = new ASLanguageManager(
 				this,
 				languageFolder,
-				getConfig().getString("language"),
+				useMiniMessage() ? getConfig().getString("mmLanguage") : getConfig().getString("language"),
 				"EN",
-				chatprefix,
+				useMiniMessage() ? getConfig().getStringList("mmChatPrefix") : chatprefix,
 				getConfig().getString("wgPrefix")
 		);
 	}
