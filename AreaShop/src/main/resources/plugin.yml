@@ -4,7 +4,7 @@ version: "${version}"
 description: "Selling and renting WorldGuard regions to your players, highly configurable."
 depend: [Vault, WorldGuard, WorldEdit]
 softdepend: [Multiverse-Core, FastAsyncWorldEdit]
-author: NLThijs48
+authors: [NLThijs48, md5sha256, Dartanman]
 website: https://github.com/md5sha256/AreaShop
 commands:
   AreaShop:
