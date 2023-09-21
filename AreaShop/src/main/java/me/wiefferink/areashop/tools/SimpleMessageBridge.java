@@ -9,6 +9,7 @@ import me.wiefferink.interactivemessenger.generators.TellrawGenerator;
 import me.wiefferink.interactivemessenger.parsers.YamlParser;
 import me.wiefferink.interactivemessenger.processing.Message;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -54,7 +55,7 @@ public class SimpleMessageBridge implements MessageBridge {
 
 
             MiniMessage mm = MiniMessage.miniMessage();
-            TextComponent parsed = (TextComponent) mm.deserialize(messageStr.toString());
+            Component parsed = mm.deserialize(messageStr.toString());
             try
             {
                 Audience audience = (Audience) target;
