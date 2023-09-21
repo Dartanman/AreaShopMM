@@ -39,35 +39,30 @@ public class SimpleMessageBridge implements MessageBridge {
     }
 
     public static void send(Message message, Object target) {
-        if(AreaShop.useMiniMessage())
-        {
+        if(AreaShop.useMiniMessage()) {
+
+            Audience audience = null;
+            try {
+                audience = (Audience) target;
+            }
+            catch (ClassCastException e) {
+                Bukkit.getLogger().severe("AreaShop sent a non-supported Object as the Audience for a Message!");
+            }
+
             if(message.get() == null || message.get().size() == 0 || (message.get().size() == 1 && message.get().get(0).length() == 0) || target == null) {
                 return;
             }
             message.doReplacements();
 
             StringBuilder messageStr = new StringBuilder();
-            for(String line : message.get())
-            {
+            for(String line : message.get()) {
                 messageStr.append(line);
             }
 
-
-
             MiniMessage mm = MiniMessage.miniMessage();
             Component parsed = mm.deserialize(messageStr.toString());
-            try
-            {
-                Audience audience = (Audience) target;
-                audience.sendMessage(parsed);
-            }
-            catch (ClassCastException e)
-            {
-                Bukkit.getLogger().severe("AreaShop sent a non-supported Object as the Audience for a Message!");
-            }
-        }
-        else
-        {
+            audience.sendMessage(parsed);
+        } else {
             message.send(target);
         }
     }
