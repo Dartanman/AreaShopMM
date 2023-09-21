@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import me.wiefferink.areashop.AreaShop;
 import me.wiefferink.areashop.MessageBridge;
+import me.wiefferink.areashop.tools.SimpleMessageBridge;
 import me.wiefferink.areashop.tools.Utils;
 import me.wiefferink.interactivemessenger.processing.Message;
 import net.kyori.adventure.audience.Audience;
@@ -57,39 +58,7 @@ public class MessageCommand extends CommandAreaShop {
 		String message = StringUtils.join(messageArgs, " ");
 
 		Message m = Message.fromString(message);
-		send(m, player);
-	}
-
-	private void send(Message message, Player target) {
-		if(AreaShop.useMiniMessage())
-		{
-			if(message.get() == null || message.get().size() == 0 || (message.get().size() == 1 && message.get().get(0).length() == 0) || target == null) {
-				return;
-			}
-			message.doReplacements();
-
-			StringBuilder messageStr = new StringBuilder();
-			for(String line : message.get())
-			{
-				messageStr.append(line);
-			}
-
-			MiniMessage mm = MiniMessage.miniMessage();
-			TextComponent parsed = (TextComponent) mm.deserialize(messageStr.toString());
-			try
-			{
-				Audience audience = (Audience) target;
-				audience.sendMessage(parsed);
-			}
-			catch (ClassCastException e)
-			{
-				Bukkit.getLogger().severe("AreaShop sent a non-supported Object as the Audience for a Message!");
-			}
-		}
-		else
-		{
-			message.send(target);
-		}
+		SimpleMessageBridge.send(m, player);
 	}
 
 	@Override

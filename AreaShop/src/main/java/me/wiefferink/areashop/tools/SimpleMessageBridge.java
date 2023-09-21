@@ -37,7 +37,7 @@ public class SimpleMessageBridge implements MessageBridge {
         send(m, target);
     }
 
-    private void send(Message message, Object target) {
+    public static void send(Message message, Object target) {
         if(AreaShop.useMiniMessage())
         {
             if(message.get() == null || message.get().size() == 0 || (message.get().size() == 1 && message.get().get(0).length() == 0) || target == null) {
