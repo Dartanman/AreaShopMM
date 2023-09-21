@@ -1,6 +1,6 @@
 package me.wiefferink.areashop;
 
-import com.google.common.base.Charsets;
+import java.nio.charset.StandardCharsets;
 import me.wiefferink.interactivemessenger.Log;
 import me.wiefferink.interactivemessenger.processing.Message;
 import me.wiefferink.interactivemessenger.source.LanguageManager;
@@ -126,7 +126,7 @@ public class ASLanguageManager extends LanguageManager
         boolean convertFromTransifex = false;
         File file = new File(languageFolder.getAbsolutePath()+File.separator+key+".yml");
         try(
-                InputStreamReader reader = new InputStreamReader(new FileInputStream(file), Charsets.UTF_8)
+                InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)
         ) {
             // Detect empty language files, happens when the YAML parsers prints an exception (it does return an empty YamlConfiguration though)
             YamlConfiguration ymlFile = YamlConfiguration.loadConfiguration(reader);
