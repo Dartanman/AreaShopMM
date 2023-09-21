@@ -36,8 +36,7 @@ public class ASLanguageManager extends LanguageManager
     private List<String> chatPrefix;
     private Map<String, List<String>> currentLanguage, defaultLanguage;
 
-    public ASLanguageManager(JavaPlugin plugin, String jarLanguagePath, String currentLanguageName, String defaultLanguageName, List<String> chatPrefix, String wgPrefix)
-    {
+    public ASLanguageManager(JavaPlugin plugin, String jarLanguagePath, String currentLanguageName, String defaultLanguageName, List<String> chatPrefix, String wgPrefix) {
         super(plugin, jarLanguagePath, currentLanguageName, defaultLanguageName, chatPrefix);
         this.plugin = plugin;
         this.jarLanguagePath = jarLanguagePath;

@@ -368,8 +368,7 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 	 * Indicates if the plugin will be using MiniMessage or not
 	 * @return true if MiniMessage should be used, false otherwise
 	 */
-	public static boolean useMiniMessage()
-	{
+	public static boolean useMiniMessage() {
 		return getInstance().getConfig().getBoolean("UseMiniMessage");
 	}
 
