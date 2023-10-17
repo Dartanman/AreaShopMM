@@ -103,11 +103,8 @@ public class ASLanguageManager extends LanguageManager
                             InputStream input = jar.getInputStream(entry);
                             OutputStream output = new FileOutputStream(targetFile)
                     ) {
-                        int read;
-                        byte[] bytes = new byte[1024];
-                        while((read = input.read(bytes)) != -1) {
-                            output.write(bytes, 0, read);
-                        }
+                        byte[] bytes = input.readAllBytes();
+                        output.write(bytes);
                     } catch(IOException e) {
                         Log.warn("Something went wrong saving a default language file: " + targetFile.getAbsolutePath());
                     }
