@@ -42,7 +42,9 @@ public class SimpleMessageBridge implements MessageBridge {
         if(AreaShop.useMiniMessage()) {
 
             if(target instanceof Audience audience) {
-                if(message.get() == null || message.get().size() == 0 || (message.get().size() == 1 && message.get().get(0).length() == 0)) {
+                if(message.get() == null || message.get().isEmpty() || (message.get().size() == 1 && message.get()
+                        .get(0)
+                        .isEmpty())) {
                     return;
                 }
                 message.doReplacements();

@@ -27,6 +27,7 @@ import me.wiefferink.areashop.modules.DependencyModule;
 import me.wiefferink.areashop.modules.PlatformModule;
 import me.wiefferink.areashop.platform.adapter.PlatformAdapter;
 import me.wiefferink.areashop.tools.GithubUpdateCheck;
+import me.wiefferink.areashop.tools.LanguageConverter;
 import me.wiefferink.areashop.tools.SimpleMessageBridge;
 import me.wiefferink.areashop.tools.SpigotPlatform;
 import me.wiefferink.areashop.tools.Utils;
@@ -53,11 +54,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
 /**
  * Main class for the AreaShop plugin.
@@ -286,6 +290,7 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 			return;
 		}
 
+		performLanguageMigrations();
 		setupLanguageManager();
 
 		featureManager = injector.getInstance(FeatureManager.class);
@@ -392,7 +397,7 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 	 * @return true if MiniMessage should be used, false otherwise
 	 */
 	public static boolean useMiniMessage() {
-		return getInstance().getConfig().getBoolean("UseMiniMessage");
+		return getInstance().getConfig().getBoolean("useMiniMessage");
 	}
 
 	/**
@@ -417,6 +422,42 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 	 */
 	public void setDebug(boolean debug) {
 		this.debug = debug;
+	}
+
+	private void performLanguageMigrations() {
+		boolean migrateExisting = this.getConfig().getBoolean("migrateLanguages", false);
+		if (!migrateExisting) {
+			return;
+		}
+		getLogger().info("Performing language migration");
+		List<String> chatPrefix = getConfig().getStringList("chatPrefix");
+		List<String> convertedChatPrefix = LanguageConverter.convertRawList(chatPrefix);
+		if (convertedChatPrefix.size() == 1) {
+			getConfig().set("mmChatPrefix", convertedChatPrefix.get(0));
+		} else {
+			getConfig().set("mmChatPrefix", convertedChatPrefix);
+		}
+		saveConfig();
+		File existingLanguages = getDataFolder().toPath().resolve(languageFolder).toFile();
+		File[] langFiles = existingLanguages.listFiles(file -> file.getName().endsWith(".yml"));
+		if (langFiles == null) {
+			return;
+		}
+		for (File file : langFiles) {
+			String name = file.getName();
+			String langName = name.substring(0, name.length() - 4);
+			File toMigrate = new File(existingLanguages, langName + "-MM.yml");
+			if (toMigrate.exists()) {
+				debug("Skipping migration for " + langName + " as it already exists.");
+				continue;
+			}
+			try {
+				LanguageConverter.performConversion(file, toMigrate);
+			} catch (IOException ex) {
+				getLogger().log(Level.SEVERE, "Failed to perform migration for lang: " + file.getName(), ex);
+			}
+		}
+		getLogger().info("Language migration complete!");
 	}
 
 	/**

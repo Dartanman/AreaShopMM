@@ -35,6 +35,8 @@ dependencies {
         exclude("com.google.guava", "guava")
     }
     implementation("net.kyori:adventure-text-minimessage:4.14.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.0")
+    implementation("org.spongepowered:configurate-yaml:4.0.0")
 
     // Project submodules
     implementation(projects.areashopInterface)

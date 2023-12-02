@@ -24,7 +24,7 @@ wgPrefix: '&2[AreaShop] &r'
 language: EN
 
 # Whether you want to use MiniMessage (in Paper) or stick to the older built-in language management for AreaShop messages.
-UseMiniMessage: false
+useMiniMessage: false
 
 # Chat prefix used for all messages in chat
 # **THIS IS ONLY APPLICABLE IF UseMiniMessage IS SET TO TRUE**
