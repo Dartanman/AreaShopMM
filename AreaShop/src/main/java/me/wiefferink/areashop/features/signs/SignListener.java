@@ -10,7 +10,7 @@ import me.wiefferink.areashop.events.notify.UpdateRegionEvent;
 import me.wiefferink.areashop.interfaces.WorldGuardInterface;
 import me.wiefferink.areashop.managers.IFileManager;
 import me.wiefferink.areashop.managers.SignLinkerManager;
-import me.wiefferink.areashop.nms.BlockBehaviourHelper;
+import me.wiefferink.areashop.platform.adapter.BlockBehaviourHelper;
 import me.wiefferink.areashop.regions.BuyRegion;
 import me.wiefferink.areashop.regions.GeneralRegion;
 import me.wiefferink.areashop.regions.RegionFactory;
@@ -36,7 +36,6 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -73,8 +72,8 @@ public class SignListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void regionUpdate(UpdateRegionEvent event) {
-        Optional<SignsFeature> signsFeature = event.getRegion().getFeature(SignsFeature.class);
-        signsFeature.map(SignsFeature::signManager).ifPresent(SignManager::update);
+        SignsFeature signsFeature = event.getRegion().getSignsFeature();
+        signsFeature.signManager().update();
     }
 
 

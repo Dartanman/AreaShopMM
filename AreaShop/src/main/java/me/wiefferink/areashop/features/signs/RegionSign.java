@@ -7,7 +7,7 @@ import io.github.bakedlibs.dough.blocks.BlockPosition;
 import io.papermc.lib.PaperLib;
 import me.wiefferink.areashop.AreaShop;
 import me.wiefferink.areashop.managers.SignErrorLogger;
-import me.wiefferink.areashop.nms.BlockBehaviourHelper;
+import me.wiefferink.areashop.platform.adapter.BlockBehaviourHelper;
 import me.wiefferink.areashop.regions.GeneralRegion;
 import me.wiefferink.areashop.tools.Materials;
 import me.wiefferink.areashop.tools.SignUtils;

@@ -408,8 +408,6 @@ public class BuyRegion extends GeneralRegion {
 			if(r == null || !r.transactionSuccess()) {
 				AreaShop.warn("Something went wrong with paying '" + oldOwnerName + "' " + getFormattedPrice() + " for his resell of region " + getName() + " to " + offlinePlayer.getName());
 			}
-			// Resell is done, disable that now
-			disableReselling();
 
 			// Set the owner
 			setBuyer(offlinePlayer.getUniqueId());
@@ -421,6 +419,9 @@ public class BuyRegion extends GeneralRegion {
 			// Notify about updates
 			this.notifyAndUpdate(new ResoldRegionEvent(this, oldOwner));
 
+			// Resell is done, disable that now
+			disableReselling();
+			
 			// Send message to the player
 			message(offlinePlayer, "buy-successResale", oldOwnerName);
 			Player seller = Bukkit.getPlayer(oldOwner);

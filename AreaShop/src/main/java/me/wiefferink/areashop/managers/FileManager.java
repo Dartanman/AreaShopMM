@@ -12,6 +12,8 @@ import me.wiefferink.areashop.events.ask.AddingRegionEvent;
 import me.wiefferink.areashop.events.ask.DeletingRegionEvent;
 import me.wiefferink.areashop.events.notify.AddedRegionEvent;
 import me.wiefferink.areashop.events.notify.DeletedRegionEvent;
+import me.wiefferink.areashop.features.signs.SignManager;
+import me.wiefferink.areashop.features.signs.SignsFeature;
 import me.wiefferink.areashop.interfaces.WorldGuardInterface;
 import me.wiefferink.areashop.regions.BuyRegion;
 import me.wiefferink.areashop.regions.GeneralRegion;
@@ -52,6 +54,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,6 +80,8 @@ public class FileManager extends Manager implements IFileManager {
 	private HashMap<String, Integer> versions = null;
 	private final String versionPath;
 	private final String schemFolder;
+
+	private final SignManager signManager;
 	private final WorldGuardInterface worldGuardInterface;
 	private final MessageBridge messageBridge;
 	private final RegionFactory regionFactory;
@@ -89,12 +94,14 @@ public class FileManager extends Manager implements IFileManager {
 			@Nonnull AreaShop plugin,
 			@Nonnull WorldGuardInterface worldGuardInterface,
 			@Nonnull MessageBridge messageBridge,
-			@Nonnull RegionFactory regionFactory
+			@Nonnull RegionFactory regionFactory,
+			@Nonnull SignManager signManager
 	) {
 		this.plugin = plugin;
 		this.worldGuardInterface = worldGuardInterface;
 		this.messageBridge = messageBridge;
 		this.regionFactory = regionFactory;
+		this.signManager = signManager;
 		regions = new HashMap<>();
 		buys = new HashMap<>();
 		rents = new HashMap<>();
@@ -117,11 +124,11 @@ public class FileManager extends Manager implements IFileManager {
 	public void shutdown() {
 		// Update lastactive time for players that are online now
 		for(GeneralRegion region : this.regions.values()) {
-			if (region.getOwner() == null) {
-				AreaShop.warn(String.format("%s has no owner", region.getName()));
+			UUID ownerUuid = region.getOwner();
+			if (ownerUuid == null) {
 				continue;
 			}
-			Player player = Bukkit.getPlayer(region.getOwner());
+			Player player = Bukkit.getPlayer(ownerUuid);
 			if(player != null) {
 				region.updateLastActiveTime();
 			}
@@ -469,8 +476,11 @@ public class FileManager extends Manager implements IFileManager {
 
 		// Delete the signs
 		if(region.getWorld() != null) {
-			for(BlockPosition sign : region.getSignsFeature().signManager().allSignLocations()) {
+			SignManager regionSignManager = region.getSignsFeature().signManager();
+			for(BlockPosition sign : regionSignManager.allSignLocations()) {
 				sign.getBlock().setType(Material.AIR);
+				regionSignManager.removeSign(sign);
+				this.signManager.removeSign(sign);
 			}
 		}
 
@@ -943,7 +953,9 @@ public class FileManager extends Manager implements IFileManager {
 	 */
 	@Override
 	public void loadRegionFiles() {
-		regions.clear();
+		this.regions.clear();
+		this.buys.clear();
+		this.rents.clear();
 		final File file = new File(regionsPath);
 		if(!file.exists()) {
 			if(!file.mkdirs()) {

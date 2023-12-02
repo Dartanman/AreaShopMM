@@ -20,7 +20,7 @@ public class GithubUpdateCheck {
 
 	public static final String API_HOST = "https://api.github.com/repos";
 	public static final String API_LATEST_RELEASE = "releases/latest";
-	public static final String USER_AGENT = "GithubUpdateCheck by NLThijs48";
+	public static final String USER_AGENT = "md5sha256 AreaShop GithubUpdateCheck";
 	public static final boolean DEBUG = false;
 
 	private final String author;

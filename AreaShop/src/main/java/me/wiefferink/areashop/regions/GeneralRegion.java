@@ -47,6 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -521,7 +522,8 @@ public abstract class GeneralRegion implements GeneralRegionInterface, Comparabl
 	 * @return true if the player is the landlord, otherwise false
 	 */
 	public boolean isLandlord(UUID landlord) {
-		return landlord != null && getLandlord() != null && getLandlord().equals(landlord);
+		UUID ourLandlord = getLandlord();
+		return Objects.equals(landlord, ourLandlord);
 	}
 
 	/**
@@ -1590,6 +1592,22 @@ public abstract class GeneralRegion implements GeneralRegionInterface, Comparabl
 		}
 
 		return volume;
+	}
+
+	/**
+	 * Whether region transfers are enabled
+	 * @return Returns true if region transfers are enabled, false otherwise
+	 */
+	public boolean isTransferEnabled() {
+		return getBooleanSetting("general.transferMode");
+	}
+
+	/**
+	 * Se whether region transfers are enabled
+	 * @param enabled Whether region transfers should be enabled, false otherwise
+	 */
+	public void setTransferEnabled(boolean enabled) {
+		setSetting("general.transferMode", enabled);
 	}
 
 	/**

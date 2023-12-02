@@ -25,11 +25,14 @@ import me.wiefferink.areashop.modules.AreaShopModule;
 import me.wiefferink.areashop.modules.BukkitModule;
 import me.wiefferink.areashop.modules.DependencyModule;
 import me.wiefferink.areashop.modules.PlatformModule;
-import me.wiefferink.areashop.nms.NMS;
+import me.wiefferink.areashop.platform.adapter.PlatformAdapter;
 import me.wiefferink.areashop.tools.GithubUpdateCheck;
 import me.wiefferink.areashop.tools.SimpleMessageBridge;
 import me.wiefferink.areashop.tools.SpigotPlatform;
 import me.wiefferink.areashop.tools.Utils;
+import me.wiefferink.areashop.tools.version.Version;
+import me.wiefferink.areashop.tools.version.VersionData;
+import me.wiefferink.areashop.tools.version.VersionUtil;
 import me.wiefferink.bukkitdo.Do;
 import me.wiefferink.interactivemessenger.source.LanguageManager;
 import net.milkbowl.vault.economy.Economy;
@@ -70,7 +73,7 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 	private WorldGuardInterface worldGuardInterface = null;
 	private WorldEditPlugin worldEdit = null;
 	private WorldEditInterface worldEditInterface = null;
-	private NMS nms;
+	private PlatformAdapter platformAdapter;
 	private MessageBridge messageBridge;
 	private IFileManager fileManager = null;
 	private LanguageManager languageManager = null;
@@ -172,18 +175,34 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 		signErrorLogger = new SignErrorLogger(new File(getDataFolder(), signLogFile));
 
 		// Setup NMS Impl
-		String rawServerVersion = Bukkit.getServer().getClass().getPackageName();
-		String[] split = rawServerVersion.split("\\.");
-		String serverVersion = split[3];
-		try {
-			Class<?> nmsImpl = Class.forName("me.wiefferink.areashop.adapters.platform." + serverVersion + ".NMSImpl");
-			this.nms = nmsImpl.asSubclass(NMS.class).getConstructor().newInstance();
-		} catch (ReflectiveOperationException ex) {
-			ex.printStackTrace();
-			error("Failed to initialize NMS implementation!");
+		Version currentServerVersion = VersionUtil.parseMinecraftVersion(Bukkit.getBukkitVersion());
+		if (currentServerVersion.versionData().isOlderThan(VersionUtil.MC_1_17_1)) {
+			error("Unsupported minecraft version: " + currentServerVersion + "! Minimum is 1.17.1");
 			shutdownOnError();
 			return;
 		}
+		if (currentServerVersion.versionData().equals(VersionUtil.MC_1_17_1)) {
+			try {
+				Class<?> adapterImpl = Class.forName("me.wiefferink.areashop.adapters.platform.legacy.LegacyPlatformAdapter");
+				this.platformAdapter = adapterImpl.asSubclass(PlatformAdapter.class).getConstructor().newInstance();
+			} catch (ReflectiveOperationException ex) {
+				ex.printStackTrace();
+				error("Failed to initialize legacy PlatformAdapter implementation!");
+				shutdownOnError();
+				return;
+			}
+		} else {
+			try {
+				Class<?> adapterImpl = Class.forName("me.wiefferink.areashop.adapters.platform.modern.ModernPlatformAdapter");
+				this.platformAdapter = adapterImpl.asSubclass(PlatformAdapter.class).getConstructor().newInstance();
+			} catch (ReflectiveOperationException ex) {
+				ex.printStackTrace();
+				error("Failed to initialize modern PlatformAdapter implementation!");
+				shutdownOnError();
+				return;
+			}
+		}
+
 		final MinecraftPlatform platform;
 		if (PaperLib.isPaper()) {
 			platform = new PaperPlatform(this);
@@ -192,7 +211,7 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 			platform = new SpigotPlatform(this);
 			info("Detected Spigot; using the SpigotPlatform impl");
 		}
-		final PlatformModule platformModule = new PlatformModule(platform, this.nms);
+		final PlatformModule platformModule = new PlatformModule(platform, this.platformAdapter);
 
 		// Check if Vault is present
 		if(getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -254,7 +273,8 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 			return;
 		}
 
-		AreaShopModule asModule = new AreaShopModule(this, messageBridge, nms, worldEditInterface, worldGuardInterface, signErrorLogger, platformModule, dependencyModule);
+		AreaShopModule asModule = new AreaShopModule(this, messageBridge,
+				platformAdapter, worldEditInterface, worldGuardInterface, signErrorLogger, platformModule, dependencyModule);
 		injector = Guice.createInjector(Stage.PRODUCTION, new BukkitModule(getServer()), asModule);
 
 		// Load all data from files and check versions
@@ -271,7 +291,7 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 		featureManager = injector.getInstance(FeatureManager.class);
 		featureManager.initializeFeatures(injector);
 		managers.add(featureManager);
-		signManager = new SignManager();
+		signManager = injector.getInstance(SignManager.class);
 		managers.add(signManager);
 
 		// Register the event listeners
@@ -296,8 +316,11 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 					this,
 					"md5sha256",
 					"AreaShop"
-			).withVersionComparator((latestVersion, currentVersion) ->
-					!cleanVersion(latestVersion).equals(cleanVersion(currentVersion))
+			).withVersionComparator((latestVersion, currentVersion) -> {
+				Version latest = Version.parse(cleanVersion(latestVersion));
+				Version current = Version.parse(cleanVersion(currentVersion));
+				return latest.versionData().isNewerThan(current.versionData());
+			}
 			).checkUpdate(result -> {
 				AreaShop.debug("Update check result:", result);
 				if(!result.hasUpdate()) {
@@ -418,8 +441,8 @@ public final class AreaShop extends JavaPlugin implements AreaShopApi {
 		this.chatprefix = chatprefix;
 	}
 
-	public NMS getNms() {
-		return nms;
+	public PlatformAdapter getPlatformAdapter() {
+		return platformAdapter;
 	}
 
 	public SignErrorLogger getSignErrorLogger() {

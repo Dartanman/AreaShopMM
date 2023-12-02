@@ -9,7 +9,7 @@ import me.wiefferink.areashop.MessageBridge;
 import me.wiefferink.areashop.interfaces.WorldGuardInterface;
 import me.wiefferink.areashop.managers.IFileManager;
 import me.wiefferink.areashop.managers.SignLinkerManager;
-import me.wiefferink.areashop.nms.BlockBehaviourHelper;
+import me.wiefferink.areashop.platform.adapter.BlockBehaviourHelper;
 import me.wiefferink.areashop.regions.RegionFactory;
 
 import javax.annotation.Nonnull;
